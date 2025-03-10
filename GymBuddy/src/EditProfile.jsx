@@ -1,25 +1,25 @@
 import React, { useRef, useState } from 'react';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, Toolbar } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import default_image from './assets/default_image.jpg';
 import './EditProfile.css';
 
 const EditProfile = ({ profileData, setProfileData }) => {
     const fileInputRef = useRef(null);
-
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState(profileData.image || null);
 
     const handleButtonClick = () => {
-        fileInputRef.current.click(); // Triggers the file input click
+        fileInputRef.current.click();
     };
 
     const handlePictureChange = (event) => {
         const selectedFile = event.target.files[0];
         if (selectedFile) {
-            setFile(selectedFile);
+            const imageUrl = URL.createObjectURL(selectedFile); 
+            setFile(imageUrl);
             setProfileData((prevData) => ({
                 ...prevData,
-                image: selectedFile,
+                image: imageUrl,
             }));
         }
     };
@@ -34,115 +34,125 @@ const EditProfile = ({ profileData, setProfileData }) => {
     const navigate = useNavigate();
 
     return (
-        <Box sx = {{ 
-                justifyContent: 'center', 
-                maxWidth: 500, 
+        <Box
+            sx={{
+                justifyContent: 'center',
+                maxWidth: 500,
                 margin: 'auto',
-                marginTop: '0px',
-                backgroundColor: 'white', 
+                backgroundColor: 'white',
                 padding: 3,
                 alignItems: 'center',
                 boxSizing: 'border-box'
-            }}>
+            }}
+        >
+            <Toolbar />
+
             <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handlePictureChange}
-                style={{ display: "none" }} // Hides the input
+                style={{ display: "none" }}
             />
+            
             <div className="image-container">
-                {/* Use default image if 'file' is null */}
                 <img 
-                    src={profileData.image || default_image} 
+                    src={file || default_image} 
                     alt="Preview" 
                     className="profile-image" 
                 />
             </div>
+
             <Button
                 variant="contained"
                 color="primary"
-                sx={{ marginTop: 2,
-                    marginBottom: 2
-                 }}
-                onClick={handleButtonClick} // Triggers file input
+                sx={{ marginTop: 2, marginBottom: 2 }}
+                onClick={handleButtonClick}
             >
                 Upload
             </Button>
-            <br/>
-            <br/>
-            <br/>
-            <Button variant = "contained"
-            color = "secondary"
-            sx = {{ marginBottom: 2}}
-            onClick = {() => navigate('/profile')}
+
+            <br />
+            <br />
+            <br />
+
+            <Button
+                variant="contained"
+                color="secondary"
+                sx={{ marginBottom: 2 }}
+                onClick={() => navigate('/profile', { state: { isOwnProfile: true, profileData } })}
             >
                 Back
             </Button>
+
             <TextField
-                label = "Name"
-                variant = "outlined"
+                label="Name"
+                variant="outlined"
                 fullWidth
-                margin = "normal"
-                value = {profileData.name}
-                onChange = {(e) => handleInputChange('name', e.target.value)}
-                sx = {{
+                margin="normal"
+                value={profileData.name}
+                onChange={(e) => handleInputChange('name', e.target.value)}
+                placeholder="Enter your name"
+                sx={{
                     '& .MuiInputBase-input::placeholder': {
                         color: 'white',
                         opacity: 1,
                     },
                 }}
-                placeholder = "Enter your name"
             />
+
             <TextField
-                label = "Age"
-                variant = "outlined"
+                label="Age"
+                variant="outlined"
                 fullWidth
-                margin = "normal"
-                value = {profileData.age}
-                onChange = {(e) => handleInputChange('age', e.target.value)}
-                sx = {{
+                margin="normal"
+                value={profileData.age}
+                onChange={(e) => handleInputChange('age', e.target.value)}
+                placeholder="Enter your age"
+                sx={{
                     '& .MuiInputBase-input::placeholder': {
                         color: 'white',
                         opacity: 1,
                     },
                 }}
-                placeholder = "Enter your age"
             />
+
             <TextField
-                label = "Gender"
-                variant = "outlined"
+                label="Gender"
+                variant="outlined"
                 fullWidth
-                margin = "normal"
-                value = {profileData.gender}
-                onChange = {(e) => handleInputChange('gender', e.target.value)}
-                sx = {{
+                margin="normal"
+                value={profileData.gender}
+                onChange={(e) => handleInputChange('gender', e.target.value)}
+                placeholder="Enter your gender"
+                sx={{
                     '& .MuiInputBase-input::placeholder': {
                         color: 'white',
                         opacity: 1,
                     },
                 }}
-                placeholder = "Enter your gender"
             />
+
             <TextField
-                label = "About Me"
-                variant = "outlined"
+                label="About Me"
+                variant="outlined"
                 fullWidth
-                margin = "normal"
-                value = {profileData.about}
-                onChange = {(e) => handleInputChange('about', e.target.value)}
-                sx = {{
+                margin="normal"
+                value={profileData.about}
+                onChange={(e) => handleInputChange('about', e.target.value)}
+                placeholder="About Me"
+                sx={{
                     '& .MuiInputBase-input::placeholder': {
                         color: 'white',
                         opacity: 1,
                     },
                 }}
-                placeholder = "About Me"
             />
+
             <Button
-                variant = "contained"
-                color = "primary"
-                sx = {{ marginTop: 2 }}
-                onClick = {() => navigate('/profile')}
+                variant="contained"
+                color="primary"
+                sx={{ marginTop: 2 }}
+                onClick={() => navigate('/profile', { state: { isOwnProfile: true, profileData } })}
             >
                 Save Changes
             </Button>
@@ -151,3 +161,4 @@ const EditProfile = ({ profileData, setProfileData }) => {
 };
 
 export default EditProfile;
+

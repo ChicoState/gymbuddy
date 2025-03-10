@@ -5,7 +5,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 
-
 const Header = () => {
   return (
     <AppBar 
@@ -19,9 +18,10 @@ const Header = () => {
     > 
       <Toolbar sx = {{ display: 'flex', justifyContent: 'center', paddingTop: '13px'}}>
         <Link 
-          to = "/profile"
-          style = {{ textDecoration: 'none' }}
-          >
+        to="/profile"
+        style={{ textDecoration: 'none' }}
+        state={{ isOwnProfile: true }}
+        >
           <Button
             sx = {{
               padding: '10px 20px',
